@@ -35,7 +35,8 @@ public:
         BiphasicWithInterphaseDelay = 1,
         Triphasic = 2,
         Monophasic = 3,
-        Triangular = 4
+        Triangular = 4,
+        RampUp = 5
     };
 
     enum StimPolarityValues {

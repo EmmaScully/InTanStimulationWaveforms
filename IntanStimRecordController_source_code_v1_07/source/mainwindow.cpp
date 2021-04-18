@@ -4663,6 +4663,13 @@ void MainWindow::setAnalogOutSequenceParameters(Rhs2000EvalBoard *evalBoard, dou
         eventEndStim = eventStartStim + firstPhaseDuration;
         eventEnd = eventEndStim + refractoryPeriod;
         break;
+        case StimParameters::Triangular:
+        eventStartStim = postTriggerDelay;
+        eventStimPhase2 = eventStartStim + firstPhaseDuration;
+        eventStimPhase3 = eventStimPhase2 + secondPhaseDuration;
+        eventEndStim = eventStartStim + firstPhaseDuration;
+        eventEnd = eventEndStim + refractoryPeriod;
+        break;
     }
 
     if (parameters->pulseOrTrain == StimParameters::PulseTrain) {
