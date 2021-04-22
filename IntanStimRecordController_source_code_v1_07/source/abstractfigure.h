@@ -42,7 +42,8 @@ protected:
     QRect drawHorizontalArrow(QPainter &painter, int xLeft, int xRight, int y, QColor color, QString label = 0, bool labelTop = true);
     void drawStimPulse(QPainter &painter, int xLeft, int xRight, int y, int yMaxAmplitude);
     QRect drawVerticalArrow(QPainter &painter, int x, int yTop, int yBottom, QColor color, QString label, bool labelLeft);
-
+    QRect drawDiagonalArrow(QPainter &painter, int x1, int y1, int x2, int y2, QColor color, QString label, bool labelLeft);
+    
     /* Colors used to draw the figure */
     const QColor backgroundColor = Qt::white;
     const QColor frameColor = Qt::darkGray;

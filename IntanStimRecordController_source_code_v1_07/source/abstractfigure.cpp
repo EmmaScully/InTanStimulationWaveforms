@@ -232,6 +232,31 @@ QRect AbstractFigure::drawVerticalArrow(QPainter &painter, int x, int yTop, int 
     return QRect(x - ArrowSize, yTop1, 2 * ArrowSize + 1, yBottom1 - yTop1 + 1);
 }
 
+QRect AbstractFigure::drawDiagonalArrow(QPainter &painter, int x1, int y1, int x2, int y2, QColor color, QString label, bool labelLeft)
+{
+    int x = x1;
+
+    QColor oldColor = painter.pen().color();
+
+    painter.setPen(color);
+    painter.drawLine(x1, y1, x2, y2);
+    
+
+    if (label.length() > 0) {
+        int labelWidth = fontMetrics().width(label);
+        int labelHeight = fontMetrics().height();
+        int xPos = x + 3;
+        if (labelLeft) {
+            xPos = x - labelWidth - 1;
+        }
+        painter.drawText(xPos, (y2 + y1 + labelHeight) / 2, label);
+    }
+
+    painter.setPen(oldColor);
+    return QRect(x - ArrowSize, y2, 2 * ArrowSize + 1, y1 - y2 + 1);
+}
+
+
 /* Protected function that allows all children to draw a stim pulse */
 void AbstractFigure::drawStimPulse(QPainter &painter, int xLeft, int xRight, int y, int yMaxAmplitude)
 {
@@ -293,12 +318,13 @@ void AbstractFigure::drawStimPulse(QPainter &painter, int xLeft, int xRight, int
                           highlitFirstPhaseAmplitude ? amplitudeLabelColorHL : amplitudeLabelColor, amplitude1Text, true);
         drawVerticalArrow(painter, (xRight + x2) / 2, y, y - sign * yMaxAmplitude,
                           highlitSecondPhaseAmplitude ? amplitudeLabelColorHL : amplitudeLabelColor, amplitude2Text, false);
+        
         painter.drawLine(xLeft, y, xLeft, y + sign * yMaxAmplitude);
         painter.drawLine(xLeft, y + sign * yMaxAmplitude, x1, y + sign * yMaxAmplitude);
         painter.drawLine(x1, y + sign * yMaxAmplitude, x1, y);
 
         if (highlitBaselineVoltage)
-            painter.setPen(durationLabelColorHL);
+        painter.setPen(durationLabelColorHL);
         painter.drawLine(x1, y, x2, y);
         painter.setPen(oldColor);
 
@@ -334,6 +360,66 @@ void AbstractFigure::drawStimPulse(QPainter &painter, int xLeft, int xRight, int
         painter.drawLine(xLeft, y, xRight, y);
         break;
         */
+
+    case StimParameters::Triangular:
+        drawHorizontalArrow(painter, xLeft, xMid, y - yMaxAmplitude - ArrowSize - 3,
+                                    highlitFirstPhaseDuration ? durationLabelColorHL : durationLabelColor, duration1Text, true);
+        drawHorizontalArrow(painter, xMid, xRight, y - yMaxAmplitude - ArrowSize - 3,
+                            highlitSecondPhaseDuration ? durationLabelColorHL : durationLabelColor, duration2Text, true);
+        drawVerticalArrow(painter, (xLeft + xMid) / 2, y, y + sign * yMaxAmplitude,
+                          highlitFirstPhaseAmplitude ? amplitudeLabelColorHL : amplitudeLabelColor, amplitude1Text, true);
+        drawVerticalArrow(painter, (xRight + xMid) / 2, y, y - sign * yMaxAmplitude,
+                          highlitSecondPhaseAmplitude ? amplitudeLabelColorHL : amplitudeLabelColor, amplitude2Text, false);
+        
+        
+        painter.drawLine(xLeft, y, 3*xMid/4, y + sign * yMaxAmplitude);
+        painter.drawLine(3*xMid/4, y + sign * yMaxAmplitude, 5*xMid/4, y - sign * yMaxAmplitude);        
+        painter.drawLine(5*xMid/4, y - sign * yMaxAmplitude, xRight, y);
+
+        break;
+
+
+    case StimParameters::Ramp:
+        drawHorizontalArrow(painter, xLeft, xMid, y - yMaxAmplitude - ArrowSize - 3,
+                                    highlitFirstPhaseDuration ? durationLabelColorHL : durationLabelColor, duration1Text, true);
+        drawHorizontalArrow(painter, xMid, xRight, y - yMaxAmplitude - ArrowSize - 3,
+                            highlitSecondPhaseDuration ? durationLabelColorHL : durationLabelColor, duration2Text, true);
+        drawVerticalArrow(painter, (xLeft + xMid) / 2, y, y + sign * yMaxAmplitude,
+                          highlitFirstPhaseAmplitude ? amplitudeLabelColorHL : amplitudeLabelColor, amplitude1Text, true);
+        drawVerticalArrow(painter, (xRight + xMid) / 2, y, y - sign * yMaxAmplitude,
+                          highlitSecondPhaseAmplitude ? amplitudeLabelColorHL : amplitudeLabelColor, amplitude2Text, false);
+       
+       //These lines down here actually draw the shape, the ones above are just labels
+        painter.drawLine(xLeft, y, xMid, y + sign * yMaxAmplitude);
+        painter.drawLine(xMid, y + sign * yMaxAmplitude, xMid, y - sign * yMaxAmplitude);
+        painter.drawLine(xMid, y - sign * yMaxAmplitude, xRight, y );
+        break;
+
+    case StimParameters::RampWithInterphaseDelay:
+        drawHorizontalArrow(painter, xLeft, x1, y - yMaxAmplitude - ArrowSize - 3,
+                            highlitFirstPhaseDuration ? durationLabelColorHL : durationLabelColor, duration1Text, true);
+        drawHorizontalArrow(painter, x1, x2, y - yMaxAmplitude - ArrowSize - 3,
+                            highlitInterphaseDelay ? durationLabelColorHL : durationLabelColor, delayText, true);
+        drawHorizontalArrow(painter, x2, xRight, y - yMaxAmplitude - ArrowSize - 3,
+                            highlitSecondPhaseDuration ? durationLabelColorHL : durationLabelColor, duration2Text, true);
+        drawVerticalArrow(painter, (xLeft + x1) / 2, y, y + sign * yMaxAmplitude,
+                          highlitFirstPhaseAmplitude ? amplitudeLabelColorHL : amplitudeLabelColor, amplitude1Text, true);
+        drawVerticalArrow(painter, (xRight + x2) / 2, y, y - sign * yMaxAmplitude,
+                          highlitSecondPhaseAmplitude ? amplitudeLabelColorHL : amplitudeLabelColor, amplitude2Text, false);
+        
+        painter.drawLine(xLeft, y, x1, y + sign * yMaxAmplitude);
+        painter.drawLine(x1, y + sign * yMaxAmplitude, x1, y);
+        
+
+        if (highlitBaselineVoltage)
+            painter.setPen(durationLabelColorHL);
+        painter.drawLine(x1, y, x2, y);
+        painter.setPen(oldColor);
+
+        
+        painter.drawLine(x2, y, x2, y - sign * yMaxAmplitude);
+        painter.drawLine(x2, y - sign * yMaxAmplitude, xRight, y );
+        break;
     }
 }
 

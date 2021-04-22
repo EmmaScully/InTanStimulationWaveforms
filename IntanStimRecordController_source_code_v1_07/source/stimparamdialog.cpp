@@ -50,7 +50,7 @@ StimParamDialog::StimParamDialog(StimParameters *parameter, QString nativeChanne
     stimShape = new QComboBox();
     QStringList stimShapes;
     //stimShapes << "Biphasic" << "Biphasic with Delay" << "Triphasic" << "No Stimulation (Amp Settle Only)";
-    stimShapes << "Biphasic" << "Biphasic with Delay" << "Triphasic" << "Monophasic"<< "Triangular" << "RampUp";
+    stimShapes << "Biphasic" << "Biphasic with Delay" << "Triphasic" << "Monophasic"<< "Triangular" << "Ramp" << "RampWithInterphaseDelay";
     stimShape->addItems(stimShapes);
 
     stimPolarityLabel = new QLabel(tr("Stimulation Polarity: "));
