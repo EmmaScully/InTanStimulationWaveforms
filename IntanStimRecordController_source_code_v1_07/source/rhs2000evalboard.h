@@ -194,7 +194,10 @@ public:
         Biphasic = 0,
         BiphasicWithInterphaseDelay = 1,
         Triphasic = 2,
-        Monophasic = 3
+        Monophasic = 3,
+		Triangular = 4,
+        Ramp = 5,
+        RampWithInterphaseDelay = 6
     };
 
     void setStimCmdMode(bool enabled);

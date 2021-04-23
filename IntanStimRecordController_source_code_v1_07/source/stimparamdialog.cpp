@@ -719,8 +719,8 @@ void StimParamDialog::enableWidgets()
     firstPhaseDuration->setEnabled(enableStim->isChecked());
     secondPhaseDurationLabel->setEnabled(enableStim->isChecked());
     secondPhaseDuration->setEnabled(enableStim->isChecked());
-    interphaseDelayLabel->setEnabled(enableStim->isChecked() && stimShape->currentIndex() == StimParameters::BiphasicWithInterphaseDelay);
-    interphaseDelay->setEnabled(enableStim->isChecked() && stimShape->currentIndex() == StimParameters::BiphasicWithInterphaseDelay);
+    interphaseDelayLabel->setEnabled(enableStim->isChecked() && ((stimShape->currentIndex() == StimParameters::BiphasicWithInterphaseDelay) || (stimShape->currentIndex() == StimParameters::RampWithInterphaseDelay))) ;
+    interphaseDelay->setEnabled(enableStim->isChecked() && ((stimShape->currentIndex() == StimParameters::BiphasicWithInterphaseDelay) || (stimShape->currentIndex() == StimParameters::RampWithInterphaseDelay))) ;
     firstPhaseAmplitudeLabel->setEnabled(enableStim->isChecked());
     firstPhaseAmplitude->setEnabled(enableStim->isChecked());
     secondPhaseAmplitudeLabel->setEnabled(enableStim->isChecked());

@@ -533,6 +533,7 @@ void AnOutDialog::enableWidgets()
     stimShape->setEnabled(enableStim->isChecked());
     stimPolarityLabel->setEnabled(enableStim->isChecked());
     stimPolarity->setEnabled(enableStim->isChecked());
+
     if (stimShape->currentIndex() == StimParameters::Monophasic)
     {
         stimPolarity->setItemText(StimParameters::NegativeFirst, "Negative Voltage");
@@ -547,14 +548,15 @@ void AnOutDialog::enableWidgets()
     firstPhaseDuration->setEnabled(enableStim->isChecked());
     secondPhaseDurationLabel->setEnabled(enableStim->isChecked() && stimShape->currentIndex() != StimParameters::Monophasic);
     secondPhaseDuration->setEnabled(enableStim->isChecked() && stimShape->currentIndex() != StimParameters::Monophasic);
-    interphaseDelayLabel->setEnabled(enableStim->isChecked() && stimShape->currentIndex() == StimParameters::BiphasicWithInterphaseDelay);
-    interphaseDelay->setEnabled(enableStim->isChecked() && stimShape->currentIndex() == StimParameters::BiphasicWithInterphaseDelay);
+    interphaseDelayLabel->setEnabled(enableStim->isChecked() && ((stimShape->currentIndex() == StimParameters::BiphasicWithInterphaseDelay) || (stimShape->currentIndex() == StimParameters::RampWithInterphaseDelay))) ;
+    interphaseDelay->setEnabled(enableStim->isChecked() && ((stimShape->currentIndex() == StimParameters::BiphasicWithInterphaseDelay) || (stimShape->currentIndex() == StimParameters::RampWithInterphaseDelay))) ;
     firstPhaseAmplitudeLabel->setEnabled(enableStim->isChecked());
     firstPhaseAmplitude->setEnabled(enableStim->isChecked());
     secondPhaseAmplitudeLabel->setEnabled(enableStim->isChecked() && stimShape->currentIndex() != StimParameters::Monophasic);
     secondPhaseAmplitude->setEnabled(enableStim->isChecked() && stimShape->currentIndex() != StimParameters::Monophasic);
     baselineVoltageLabel->setEnabled(enableStim->isChecked());
     baselineVoltage->setEnabled(enableStim->isChecked());
+   
 
     /* Reset Text for First Phase Labels */
     if (stimShape->currentIndex() != StimParameters::Triphasic)
@@ -602,7 +604,7 @@ void AnOutDialog::constrainPulseTrainPeriod()
     }
 
     //if biphasic with interphase delay
-    else if (stimShape->currentIndex() == StimParameters::BiphasicWithInterphaseDelay)
+    else if ((stimShape->currentIndex() == StimParameters::BiphasicWithInterphaseDelay) || (stimShape->currentIndex() == StimParameters::RampWithInterphaseDelay))
     {
         //minimum equals D1 + D2 + D_int
         minimum = firstPhaseDuration->getTrueValue() + secondPhaseDuration->getTrueValue() + interphaseDelay->getTrueValue();
